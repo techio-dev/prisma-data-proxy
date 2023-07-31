@@ -9,6 +9,7 @@ import (
 type ApiEngine struct {
 	apiKey             string
 	version            string
+	hash               string
 	isTransaction      bool
 	isTransactionStart bool
 	path               []string
@@ -25,8 +26,9 @@ func (e *ApiEngine) HandleAuthorization(authorization string) {
 func (e *ApiEngine) HandlePath(path string) {
 	sections := strings.Split(path, "/")
 	e.version = sections[1]
+	e.hash = sections[2]
 	isTransactionHandle := false
-	if sections[3] == "transaction" {
+	if len(sections) > 3 && sections[3] == "transaction" {
 		e.isTransaction = true
 		switch sections[len(sections)-1] {
 		case "start":
