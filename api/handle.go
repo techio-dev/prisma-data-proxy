@@ -76,12 +76,12 @@ func (r *ApiHandle) WriteStart(w http.ResponseWriter) error {
 	if err := json.NewDecoder(r.resp.Body).Decode(data); err != nil {
 		return err
 	}
-	endpoint := []string{r.host}
+	endpoint := []string{"https:", "", r.host}
 	endpoint = append(endpoint, r.engine.version)
-	endpoint = append(endpoint, "hash")
+	endpoint = append(endpoint, r.engine.hash)
 	endpoint = append(endpoint, "transaction")
 	endpoint = append(endpoint, data.Id)
-	log.Printf("endpoint: %v", endpoint)
+	log.Printf("ENDPOINT: %v", endpoint)
 	data.DataProxy.Endpoint = strings.Join(endpoint, "/")
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		return err
