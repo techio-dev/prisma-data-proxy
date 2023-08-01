@@ -27,7 +27,11 @@ func NewApiHandle(engine *ApiEngine, host string) *ApiHandle {
 }
 
 func (r *ApiHandle) New(method string, body io.ReadCloser) error {
-	req, err := http.NewRequest(method, r.engine.Url(), body)
+	url, err := r.engine.Url()
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return err
 	}

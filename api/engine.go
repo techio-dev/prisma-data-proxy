@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"log"
 	"os"
 	"strings"
@@ -50,13 +51,18 @@ func (e *ApiEngine) HandlePath(path string) {
 func (e *ApiEngine) EngineUrl() string {
 	params := []string{e.apiKey, strings.ReplaceAll(e.version, ".", "")}
 	if e.isTransaction {
-		params = append(params, "0")
+		params = append(params, "tx")
 	}
+	log.Printf("ENV: %v", params)
 	return os.Getenv(strings.Join(params, "-"))
 }
-func (e *ApiEngine) Url() string {
-	path := []string{e.EngineUrl()}
+func (e *ApiEngine) Url() (string, error) {
+	engineUrl := e.EngineUrl()
+	if engineUrl == "" {
+		return "", errors.New("not found engine url")
+	}
+	path := []string{engineUrl}
 	path = append(path, e.path...)
 	log.Printf("URL: %v", path)
-	return strings.Join(path, "/")
+	return strings.Join(path, "/"), nil
 }
