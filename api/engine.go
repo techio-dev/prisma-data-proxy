@@ -20,16 +20,23 @@ func NewApiEngine() *ApiEngine {
 	return &ApiEngine{}
 }
 
-func (e *ApiEngine) HandleAuthorization(authorization string) {
+func (e *ApiEngine) HandleAuthorization(authorization string) error {
+	if authorization == "" {
+		return errors.New("authorization not found")
+	}
 	e.apiKey = strings.TrimPrefix(authorization, "Bearer ")
+	return nil
 }
 
-func (e *ApiEngine) HandlePath(path string) {
+func (e *ApiEngine) HandlePath(path string) error {
 	sections := strings.Split(path, "/")
+	if len(sections) <= 3 {
+		return errors.New("parse url path failure")
+	}
 	e.version = sections[1]
 	e.hash = sections[2]
 	isTransactionHandle := false
-	if len(sections) > 3 && sections[3] == "transaction" {
+	if sections[3] == "transaction" {
 		e.isTransaction = true
 		switch sections[len(sections)-1] {
 		case "start":
@@ -46,6 +53,7 @@ func (e *ApiEngine) HandlePath(path string) {
 	} else {
 		e.path = []string{""}
 	}
+	return nil
 }
 
 func (e *ApiEngine) EngineUrl() string {
