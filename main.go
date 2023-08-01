@@ -27,7 +27,7 @@ func proxy(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func main() {
-	log.Println("ListenAndServe :8080")
+	log.Println("[0.1.2] ListenAndServe :8080")
 	if err := http.ListenAndServe(":8080", http.HandlerFunc(proxy)); err != nil {
 		log.Panicln(err)
 	}
