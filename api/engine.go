@@ -30,7 +30,7 @@ func (e *ApiEngine) HandleAuthorization(authorization string) error {
 
 func (e *ApiEngine) HandlePath(path string) error {
 	sections := strings.Split(path, "/")
-	if len(sections) <= 3 {
+	if len(sections) < 3 {
 		return errors.New("parse url path failure")
 	}
 	e.version = sections[1]
